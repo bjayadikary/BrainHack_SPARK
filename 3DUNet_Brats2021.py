@@ -55,10 +55,10 @@ wandb.init(
 # In[97]:
 
 
-main_directory = "archive/BraTS2021_Training_Data/test"
-output_directory = "archive/BraTS2021_Training_Data/processed_train"
-main_directory_val = "archive/BraTS2021_Training_Data/val"
-output_directory_val = "archive/BraTS2021_Training_Data/processed_val"
+main_directory = "../data/train_minidata2021"
+output_directory = "../data/train_minidata2021/processed_train"
+main_directory_val = "../data/validation_minidata2021"
+output_directory_val = "../data/validation_minidata2021/processed_val"
 
 
 # In[98]:
