@@ -1,0 +1,52 @@
+{
+    "os": "Windows-10-10.0.19045-SP0",
+    "python": "3.9.19",
+    "heartbeatAt": "2024-05-21T04:16:28.691931",
+    "startedAt": "2024-05-21T04:16:25.566001",
+    "docker": null,
+    "cuda": null,
+    "args": [],
+    "state": "running",
+    "program": "<python with no main file>",
+    "codePathLocal": null,
+    "git": {
+        "remote": "git@github.com:bjayadikary/BrainHack_SPARK.git",
+        "commit": "f471454f9d8ed720945be91706a0787ddebb4cc9"
+    },
+    "email": "bjayadikari.ba@gmail.com",
+    "root": "D:/BrainHack/brainhack_spark_git",
+    "host": "Jay",
+    "username": "lenovo",
+    "executable": "c:\\Users\\lenovo\\anaconda3\\envs\\mbase\\python.exe",
+    "cpu_count": 8,
+    "cpu_count_logical": 16,
+    "cpu_freq": {
+        "current": 2900.0,
+        "min": 0.0,
+        "max": 2900.0
+    },
+    "cpu_freq_per_core": [
+        {
+            "current": 2900.0,
+            "min": 0.0,
+            "max": 2900.0
+        }
+    ],
+    "disk": {
+        "/": {
+            "total": 76.62792587280273,
+            "used": 57.41596984863281
+        }
+    },
+    "gpu": "NVIDIA GeForce GTX 1650",
+    "gpu_count": 1,
+    "gpu_devices": [
+        {
+            "name": "NVIDIA GeForce GTX 1650",
+            "memory_total": 4294967296
+        }
+    ],
+    "memory": {
+        "total": 15.372379302978516
+    }
+}

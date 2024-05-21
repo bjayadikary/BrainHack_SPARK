@@ -1,0 +1,5 @@
+2024-05-21 10:08:35,426 INFO    StreamThr :29668 [internal.py:wandb_internal():85] W&B internal server running at pid: 29668, started at: 2024-05-21 10:08:35.426863
+2024-05-21 10:08:35,428 DEBUG   HandlerThread:29668 [handler.py:handle_request():158] handle_request: status
+2024-05-21 10:08:35,431 INFO    WriterThread:29668 [datastore.py:open_for_write():87] open: d:\BrainHack\brainhack_spark_git\wandb\run-20240521_100835-9c0cns28\run-9c0cns28.wandb
+2024-05-21 10:08:35,432 DEBUG   SenderThread:29668 [sender.py:send():378] send: header
+2024-05-21 10:08:35,478 DEBUG   SenderThread:29668 [sender.py:send():378] send: run

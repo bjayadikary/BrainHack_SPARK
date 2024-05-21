@@ -1,0 +1,118 @@
+
+sample_mask_slice torch.Size([240, 240])
+Batch images shape torch.Size([2, 4, 128, 240, 240])
+Batch masks shape torch.Size([2, 1, 128, 240, 240])
+--------------------
+UNet(
+  (model): Sequential(
+    (0): Convolution(
+      (conv): Conv3d(4, 16, kernel_size=(3, 3, 3), stride=(2, 2, 2), padding=(1, 1, 1))
+      (adn): ADN(
+        (N): InstanceNorm3d(16, eps=1e-05, momentum=0.1, affine=False, track_running_stats=False)
+        (D): Dropout(p=0.0, inplace=False)
+        (A): PReLU(num_parameters=1)
+      )
+    )
+    (1): SkipConnection(
+      (submodule): Sequential(
+        (0): Convolution(
+          (conv): Conv3d(16, 32, kernel_size=(3, 3, 3), stride=(2, 2, 2), padding=(1, 1, 1))
+          (adn): ADN(
+            (N): InstanceNorm3d(32, eps=1e-05, momentum=0.1, affine=False, track_running_stats=False)
+            (D): Dropout(p=0.0, inplace=False)
+            (A): PReLU(num_parameters=1)
+          )
+        )
+        (1): SkipConnection(
+          (submodule): Sequential(
+            (0): Convolution(
+              (conv): Conv3d(32, 64, kernel_size=(3, 3, 3), stride=(2, 2, 2), padding=(1, 1, 1))
+              (adn): ADN(
+                (N): InstanceNorm3d(64, eps=1e-05, momentum=0.1, affine=False, track_running_stats=False)
+                (D): Dropout(p=0.0, inplace=False)
+                (A): PReLU(num_parameters=1)
+              )
+            )
+            (1): SkipConnection(
+              (submodule): Sequential(
+                (0): Convolution(
+                  (conv): Conv3d(64, 128, kernel_size=(3, 3, 3), stride=(2, 2, 2), padding=(1, 1, 1))
+                  (adn): ADN(
+                    (N): InstanceNorm3d(128, eps=1e-05, momentum=0.1, affine=False, track_running_stats=False)
+                    (D): Dropout(p=0.0, inplace=False)
+                    (A): PReLU(num_parameters=1)
+                  )
+                )
+                (1): SkipConnection(
+                  (submodule): Convolution(
+                    (conv): Conv3d(128, 256, kernel_size=(3, 3, 3), stride=(1, 1, 1), padding=(1, 1, 1))
+                    (adn): ADN(
+                      (N): InstanceNorm3d(256, eps=1e-05, momentum=0.1, affine=False, track_running_stats=False)
+                      (D): Dropout(p=0.0, inplace=False)
+                      (A): PReLU(num_parameters=1)
+                    )
+                  )
+                )
+                (2): Convolution(
+                  (conv): ConvTranspose3d(384, 64, kernel_size=(3, 3, 3), stride=(2, 2, 2), padding=(1, 1, 1), output_padding=(1, 1, 1))
+                  (adn): ADN(
+                    (N): InstanceNorm3d(64, eps=1e-05, momentum=0.1, affine=False, track_running_stats=False)
+                    (D): Dropout(p=0.0, inplace=False)
+                    (A): PReLU(num_parameters=1)
+                  )
+                )
+              )
+            )
+            (2): Convolution(
+              (conv): ConvTranspose3d(128, 32, kernel_size=(3, 3, 3), stride=(2, 2, 2), padding=(1, 1, 1), output_padding=(1, 1, 1))
+              (adn): ADN(
+                (N): InstanceNorm3d(32, eps=1e-05, momentum=0.1, affine=False, track_running_stats=False)
+                (D): Dropout(p=0.0, inplace=False)
+                (A): PReLU(num_parameters=1)
+              )
+            )
+          )
+        )
+        (2): Convolution(
+          (conv): ConvTranspose3d(64, 16, kernel_size=(3, 3, 3), stride=(2, 2, 2), padding=(1, 1, 1), output_padding=(1, 1, 1))
+          (adn): ADN(
+            (N): InstanceNorm3d(16, eps=1e-05, momentum=0.1, affine=False, track_running_stats=False)
+            (D): Dropout(p=0.0, inplace=False)
+            (A): PReLU(num_parameters=1)
+          )
+        )
+      )
+    )
+    (2): Convolution(
+      (conv): ConvTranspose3d(32, 4, kernel_size=(3, 3, 3), stride=(2, 2, 2), padding=(1, 1, 1), output_padding=(1, 1, 1))
+    )
+  )
+)
+=================================================================
+Layer (type:depth-idx)                   Param #
+=================================================================
+├─Sequential: 1-1                        --
+|    └─Convolution: 2-1                  --
+|    |    └─Conv3d: 3-1                  1,744
+|    |    └─ADN: 3-2                     1
+|    └─SkipConnection: 2-2               --
+|    |    └─Sequential: 3-3              1,977,431
+|    └─Convolution: 2-3                  --
+|    |    └─ConvTranspose3d: 3-4         3,460
+=================================================================
+Total params: 1,982,636
+Trainable params: 1,982,636
+Non-trainable params: 0
+=================================================================
+  0%|          | 0/5 [00:00<?, ?it/s]c:\Users\lenovo\anaconda3\envs\mbase\lib\site-packages\torch\nn\modules\conv.py:1104: UserWarning: Plan failed with a cudnnException: CUDNN_BACKEND_EXECUTION_PLAN_DESCRIPTOR: cudnnFinalize Descriptor Failed cudnn_status: CUDNN_STATUS_NOT_SUPPORTED (Triggered internally at C:\actions-runner\_work\pytorch\pytorch\builder\windows\pytorch\aten\src\ATen\native\cudnn\Conv_v8.cpp:919.)
+  return F.conv_transpose3d(
+ 20%|██        | 1/5 [00:40<02:41, 40.45s/it]
+
+ 40%|████      | 2/5 [01:14<01:49, 36.66s/it]
+
+ 60%|██████    | 3/5 [01:48<01:11, 35.65s/it]
+
+ 80%|████████  | 4/5 [02:23<00:35, 35.15s/it]
+
+100%|██████████| 5/5 [02:57<00:00, 35.48s/it]
+Epoch: 5 |train_loss: 0.8359 |val_loss: 4.1554 |

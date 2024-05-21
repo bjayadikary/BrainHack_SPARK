@@ -1,0 +1,59 @@
+2024-05-21 10:01:25,568 INFO    MainThread:24628 [wandb_setup.py:_flush():76] Current SDK version is 0.17.0
+2024-05-21 10:01:25,568 INFO    MainThread:24628 [wandb_setup.py:_flush():76] Configure stats pid to 24628
+2024-05-21 10:01:25,568 INFO    MainThread:24628 [wandb_setup.py:_flush():76] Loading settings from C:\Users\lenovo\.config\wandb\settings
+2024-05-21 10:01:25,568 INFO    MainThread:24628 [wandb_setup.py:_flush():76] Loading settings from d:\BrainHack\brainhack_spark_git\wandb\settings
+2024-05-21 10:01:25,568 INFO    MainThread:24628 [wandb_setup.py:_flush():76] Loading settings from environment variables: {}
+2024-05-21 10:01:25,568 INFO    MainThread:24628 [wandb_setup.py:_flush():76] Inferring run settings from compute environment: {'program': '<python with no main file>'}
+2024-05-21 10:01:25,569 INFO    MainThread:24628 [wandb_setup.py:_flush():76] Applying login settings: {}
+2024-05-21 10:01:25,569 INFO    MainThread:24628 [wandb_setup.py:_flush():76] Applying login settings: {'api_key': '***REDACTED***'}
+2024-05-21 10:01:25,569 INFO    MainThread:24628 [wandb_setup.py:_flush():76] Applying login settings: {}
+2024-05-21 10:01:25,569 INFO    MainThread:24628 [wandb_init.py:_log_setup():520] Logging user logs to d:\BrainHack\brainhack_spark_git\wandb\run-20240521_100125-6jnds7z8\logs\debug.log
+2024-05-21 10:01:25,569 INFO    MainThread:24628 [wandb_init.py:_log_setup():521] Logging internal logs to d:\BrainHack\brainhack_spark_git\wandb\run-20240521_100125-6jnds7z8\logs\debug-internal.log
+2024-05-21 10:01:25,569 INFO    MainThread:24628 [wandb_init.py:_jupyter_setup():466] configuring jupyter hooks <wandb.sdk.wandb_init._WandbInit object at 0x000002B1084C40A0>
+2024-05-21 10:01:25,569 INFO    MainThread:24628 [wandb_init.py:init():560] calling init triggers
+2024-05-21 10:01:25,569 INFO    MainThread:24628 [wandb_init.py:init():567] wandb.init called with sweep_config: {}
+config: {'epochs': 5, 'batch_size': 2, 'lr': 0.001}
+2024-05-21 10:01:25,569 INFO    MainThread:24628 [wandb_init.py:init():610] starting backend
+2024-05-21 10:01:25,569 INFO    MainThread:24628 [wandb_init.py:init():614] setting up manager
+2024-05-21 10:01:25,572 INFO    MainThread:24628 [backend.py:_multiprocessing_setup():105] multiprocessing start_methods=spawn, using: spawn
+2024-05-21 10:01:25,575 INFO    MainThread:24628 [wandb_init.py:init():622] backend started and connected
+2024-05-21 10:01:25,578 INFO    MainThread:24628 [wandb_run.py:_label_probe_notebook():1328] probe notebook
+2024-05-21 10:01:25,579 INFO    MainThread:24628 [wandb_run.py:_label_probe_notebook():1338] Unable to probe notebook: 'NoneType' object has no attribute 'get'
+2024-05-21 10:01:25,579 INFO    MainThread:24628 [wandb_init.py:init():711] updated telemetry
+2024-05-21 10:01:25,642 INFO    MainThread:24628 [wandb_init.py:init():744] communicating run to backend with 90.0 second timeout
+2024-05-21 10:01:26,810 INFO    MainThread:24628 [wandb_run.py:_on_init():2396] communicating current version
+2024-05-21 10:01:27,408 INFO    MainThread:24628 [wandb_run.py:_on_init():2405] got version response 
+2024-05-21 10:01:27,408 INFO    MainThread:24628 [wandb_init.py:init():795] starting run threads in backend
+2024-05-21 10:01:32,798 INFO    MainThread:24628 [wandb_run.py:_console_start():2374] atexit reg
+2024-05-21 10:01:32,798 INFO    MainThread:24628 [wandb_run.py:_redirect():2229] redirect: wrap_raw
+2024-05-21 10:01:32,798 INFO    MainThread:24628 [wandb_run.py:_redirect():2294] Wrapping output streams.
+2024-05-21 10:01:32,798 INFO    MainThread:24628 [wandb_run.py:_redirect():2319] Redirects installed.
+2024-05-21 10:01:32,800 INFO    MainThread:24628 [wandb_init.py:init():838] run started, returning control to user process
+2024-05-21 10:01:32,803 INFO    MainThread:24628 [jupyter.py:save_ipynb():373] not saving jupyter notebook
+2024-05-21 10:01:32,804 INFO    MainThread:24628 [wandb_init.py:_pause_backend():431] pausing backend
+2024-05-21 10:02:13,723 INFO    MainThread:24628 [wandb_init.py:_resume_backend():436] resuming backend
+2024-05-21 10:02:13,734 INFO    MainThread:24628 [wandb_setup.py:_flush():76] Current SDK version is 0.17.0
+2024-05-21 10:02:13,735 INFO    MainThread:24628 [wandb_setup.py:_flush():76] Configure stats pid to 24628
+2024-05-21 10:02:13,735 INFO    MainThread:24628 [wandb_setup.py:_flush():76] Loading settings from C:\Users\lenovo\.config\wandb\settings
+2024-05-21 10:02:13,735 INFO    MainThread:24628 [wandb_setup.py:_flush():76] Loading settings from d:\BrainHack\brainhack_spark_git\wandb\settings
+2024-05-21 10:02:13,735 INFO    MainThread:24628 [wandb_setup.py:_flush():76] Loading settings from environment variables: {}
+2024-05-21 10:02:13,735 INFO    MainThread:24628 [wandb_setup.py:_flush():76] Inferring run settings from compute environment: {'program': '<python with no main file>'}
+2024-05-21 10:02:13,736 INFO    MainThread:24628 [wandb_setup.py:_flush():76] Applying login settings: {}
+2024-05-21 10:02:13,736 INFO    MainThread:24628 [wandb_setup.py:_flush():76] Applying login settings: {'api_key': '***REDACTED***'}
+2024-05-21 10:02:13,736 INFO    MainThread:24628 [wandb_setup.py:_flush():76] Applying login settings: {}
+2024-05-21 10:02:13,736 INFO    MainThread:24628 [wandb_init.py:_log_setup():520] Logging user logs to d:\BrainHack\brainhack_spark_git\wandb\run-20240521_100213-3jpf1hp9\logs\debug.log
+2024-05-21 10:02:13,737 INFO    MainThread:24628 [wandb_init.py:_log_setup():521] Logging internal logs to d:\BrainHack\brainhack_spark_git\wandb\run-20240521_100213-3jpf1hp9\logs\debug-internal.log
+2024-05-21 10:02:13,737 INFO    MainThread:24628 [wandb_init.py:init():560] calling init triggers
+2024-05-21 10:02:13,737 INFO    MainThread:24628 [wandb_init.py:init():567] wandb.init called with sweep_config: {}
+config: {'epochs': 5, 'batch_size': 2, 'lr': 0.001}
+2024-05-21 10:02:13,737 INFO    MainThread:24628 [wandb_init.py:init():585] re-initializing run, found existing run on stack: 6jnds7z8
+2024-05-21 10:02:13,740 INFO    MainThread:24628 [wandb_run.py:_finish():2103] finishing run tribhuvan-university/BrainTumor2018 Imlemetation/6jnds7z8
+2024-05-21 10:02:13,741 ERROR   MainThread:24628 [jupyter.py:save_history():437] Run pip install nbformat to save notebook history
+2024-05-21 10:02:13,742 INFO    MainThread:24628 [jupyter.py:save_ipynb():373] not saving jupyter notebook
+2024-05-21 10:02:13,742 INFO    MainThread:24628 [wandb_init.py:_jupyter_teardown():448] cleaning up jupyter logic
+2024-05-21 10:02:13,742 INFO    MainThread:24628 [wandb_run.py:_atexit_cleanup():2343] got exitcode: 0
+2024-05-21 10:02:13,742 INFO    MainThread:24628 [wandb_run.py:_restore():2326] restore
+2024-05-21 10:02:13,742 INFO    MainThread:24628 [wandb_run.py:_restore():2332] restore done
+2024-05-21 10:02:19,529 INFO    MainThread:24628 [wandb_run.py:_footer_history_summary_info():3994] rendering history
+2024-05-21 10:02:19,529 INFO    MainThread:24628 [wandb_run.py:_footer_history_summary_info():4026] rendering summary
+2024-05-21 10:02:19,535 INFO    MainThread:24628 [wandb_run.py:_footer_sync_info():3953] logging synced files
