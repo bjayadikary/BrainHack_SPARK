@@ -15,7 +15,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 import random
-import cv2
+#import cv2
 
 from torchsummary import summary
 from skimage import transform
