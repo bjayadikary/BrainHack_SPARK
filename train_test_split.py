@@ -14,10 +14,10 @@ def copy_folders(src, dst, folders):
 
 def main():
     # Define source and destination directories
-    source_dir = 'archive/BraTS2021_Training_Data'
-    train_dir = 'train_minidata'
-    validation_dir = 'validation_minidata'
-    test_dir = 'test_minidata'
+    source_dir = '../data/BraTS2021'
+    train_dir = '../data/train_minidata2021'
+    validation_dir = '../data/validation_minidata2021'
+    test_dir = '../data/test_minidata2021'
 
     # Create destination directories if they don't exist
     create_directory(train_dir)
