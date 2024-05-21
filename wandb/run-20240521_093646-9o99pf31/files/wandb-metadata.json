@@ -1,0 +1,79 @@
+{
+    "os": "Linux-6.5.0-35-generic-x86_64-with-glibc2.35",
+    "python": "3.11.5",
+    "heartbeatAt": "2024-05-21T03:51:48.887612",
+    "startedAt": "2024-05-21T03:51:46.955353",
+    "docker": null,
+    "cuda": null,
+    "args": [],
+    "state": "running",
+    "program": "git clone/BrainHack_SPARK/3DUNet_Brats2021.ipynb",
+    "codePathLocal": null,
+    "root": "/home/laxmi/spark/MedHack/git clone/BrainHack_SPARK",
+    "git": {
+        "remote": "git@github.com:bjayadikary/BrainHack_SPARK.git",
+        "commit": "65aabd961a72cde541561c71471a96604dad8a59"
+    },
+    "email": "justkantapoudel@gmail.com",
+    "host": "max-it",
+    "username": "laxmi",
+    "executable": "/home/laxmi/miniconda3/bin/python",
+    "cpu_count": 4,
+    "cpu_count_logical": 8,
+    "cpu_freq": {
+        "current": 1161.973375,
+        "min": 400.0,
+        "max": 4200.0
+    },
+    "cpu_freq_per_core": [
+        {
+            "current": 1264.227,
+            "min": 400.0,
+            "max": 4200.0
+        },
+        {
+            "current": 590.745,
+            "min": 400.0,
+            "max": 4200.0
+        },
+        {
+            "current": 1300.0,
+            "min": 400.0,
+            "max": 4200.0
+        },
+        {
+            "current": 400.0,
+            "min": 400.0,
+            "max": 4200.0
+        },
+        {
+            "current": 1272.064,
+            "min": 400.0,
+            "max": 4200.0
+        },
+        {
+            "current": 1269.175,
+            "min": 400.0,
+            "max": 4200.0
+        },
+        {
+            "current": 1259.974,
+            "min": 400.0,
+            "max": 4200.0
+        },
+        {
+            "current": 1300.0,
+            "min": 400.0,
+            "max": 4200.0
+        }
+    ],
+    "disk": {
+        "/": {
+            "total": 233.17998886108398,
+            "used": 211.5750503540039
+        }
+    },
+    "memory": {
+        "total": 11.406620025634766
+    }
+}
