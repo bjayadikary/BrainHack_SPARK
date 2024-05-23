@@ -5,6 +5,59 @@ import torch.nn.functional as F
 import numpy as np
 import datetime
 
+
+########
+# Data transforms
+########
+class permute_and_add_axis_to_mask(object):
+    def __call__(self, sample):
+        # Previous: (240, 240, 155, 4) , need to change to (4, 155, 240, 240) i.e. (channel, depth, height, width)
+        image, mask = sample['image'], sample['mask']
+
+        image = image.transpose((3, 2, 0, 1))
+        mask = mask.transpose((2, 0, 1))
+
+        mask= mask[np.newaxis, ...]
+        return {'image':image,
+                'mask':mask}
+    
+class spatialpad(object): # First dimension should be left untouched of [C, D, H, W]
+    def __init__(self, image_target_size=[4, 256, 256, 256], mask_target_size=[1, 256, 256, 256]):
+        self.image_target_size = image_target_size
+        self.mask_target_size = mask_target_size
+
+    def __call__(self, sample):
+        image, mask = sample['image'], sample['mask'] # image: [4, 155, 240, 240], mask[1, 155, 240, 240]
+
+        padded_image = self.pad_input(image, self.image_target_size)
+
+        padded_mask = self.pad_input(mask, self.mask_target_size)
+
+        return {'image': padded_image,
+                'mask': padded_mask}
+    
+
+    def pad_input(self, input_array, target_size):
+        # Ensure the input array is a numpy array
+        if not isinstance(input_array, np.ndarray):
+            input_array = np.array(input_array)
+
+        # Calculate padding sizes for each dimension
+        pad_width = []
+        for i in range(len(input_array.shape)):
+            total_padding = target_size[i] - input_array.shape[i]
+            if total_padding < 0:
+                raise ValueError(f"Target shape must be larger than the input shape. Dimension {i} is too small.")
+            pad_before = total_padding // 2
+            pad_after = total_padding - pad_before
+            pad_width.append((pad_before, pad_after))
+
+        # Pad the image
+        padded_image = np.pad(input_array, pad_width, mode='constant', constant_values=0)
+
+        return padded_image   
+
+
 class DiceLoss(nn.Module):
     def __init__(self, smooth=1.0):
         super().__init__()
@@ -19,8 +72,8 @@ class DiceLoss(nn.Module):
             y_true = y_true.long()
 
         # One-hot encode y_true
-        batch_size, channel, *spatial_dim = y_true.shape
-        y_true_one_hot = F.one_hot(y_true, num_classes=y_pred.shape[1]).view(batch_size, y_pred.shape[1], *spatial_dim).float() # One hot generates ([batch, channel=1, D, H, W, 4]), then reshaped to (B, C=4, D, H, W)
+        batch_size, channel, *spatial_dim = y_pred.shape
+        y_true_one_hot = F.one_hot(y_true, num_classes=y_pred.shape[1]).view(batch_size, channel, *spatial_dim).float() # One hot generates ([batch, channel=1, D, H, W, 4]), then reshaped to (B, C=4, D, H, W)
         assert y_true_one_hot.size() == y_pred.size()
 
         # Flatten the tensors
@@ -43,6 +96,12 @@ class DiceScore(nn.Module):
         self.smooth = smooth
 
     def forward(self, predicted_class_labels, y_true): # predicted_class_labels is output from argmax of shape [batch, 1, 155, 240, 240] {0, 1, 2, 3}, and y_true is also [batch, 1, 155, 240, 240] {0, 1, 2, 3}
+        '''
+
+        args:
+            predicted_clss_labels (torch.Tensor) : B1HWD
+            y_true (torch.Tensor) : B1HWD
+        '''
         # Get total number of classes
         num_classes = predicted_class_labels.max() + 1
 
@@ -56,16 +115,16 @@ class DiceScore(nn.Module):
 
         # one-hot encode y_true
         batch_size, channel, *spatial_dim = y_true.shape # after squeeze y_true shape [batch_size, *spatial_dim]
-        y_true_one_hot = F.one_hot(y_true.squeeze(), num_classes=num_classes).view(batch_size, num_classes, *spatial_dim).float() # One hot of shape ([B, C=1, D, H, W, 4]), then reshaped to (B, C=4, D, H, W)
+        y_true_one_hot = F.one_hot(y_true.squeeze(), num_classes=int(num_classes)).view(batch_size, num_classes, *spatial_dim).float() # One hot of shape ([B, C=1, D, H, W, 4]), then reshaped to (B, C=4, D, H, W)
 
         # One-hot encode the predicted_class_labels
-        predicted_one_hot = F.one_hot(predicted_class_labels.squeeze(), num_classes).view(batch_size, num_classes, *spatial_dim).float()
+        predicted_one_hot = F.one_hot(predicted_class_labels.squeeze(), int(num_classes)).view(batch_size, num_classes, *spatial_dim).float()
 
         assert y_true_one_hot.shape == predicted_one_hot.shape
 
         dice_scores = []
 
-        for cls in range(1, num_classes): # skip the background class (0)
+        for cls in range(0, num_classes): # skip the background class (0)
             # Get first channel mask of predicted_one_hot and y_true_one_hot
             pred_onehot_cls = predicted_one_hot[:, cls, :, :, :] # [batch, 155, 240, 240]
             y_true_one_hot_cls = y_true_one_hot[:, cls, :, :, :] # [batch, 155, 240, 240]
@@ -77,16 +136,16 @@ class DiceScore(nn.Module):
             dice_scores.append(dice_score_cls)
 
         # Average dice scores across all non-background channels(classes) to get mean_dice_score
-        mean_dice_score = np.mean(dice_scores)
+        # mean_dice_score = np.mean(dice_scores)
         
-        return mean_dice_score
+        return dice_scores
          
 
 
 def dice_coefficient(y_pred, y): # takes one plane/class at a time out of 4 planes # both one-hot encoded in case we are calculating dice_score. However, when calculating DiceLoss things are different.
     smooth = 1e-10
-    y_pred = torch.round(y_pred).int()
-    y = torch.round(y).int()
+    # y_pred = torch.round(y_pred).int()
+    # y = torch.round(y).int()
             
     # Transfer tensors to CPU before converting to numpy arrays
     y_pred_np = y_pred.cpu().numpy()
@@ -104,12 +163,12 @@ def dice_coefficient(y_pred, y): # takes one plane/class at a time out of 4 plan
     return dice
 
 
-def save_checkpoint(model, checkpoint_dir, optimizer, epoch, train_loss, val_loss, train_dice_score, val_dice_score):
+def save_checkpoint(model, checkpoint_dir, optimizer, epoch, train_loss, val_dice_score):
     # Generate a timestamp
     timestamp = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
     
     # File path to save the checkpoint
-    checkpoint_path = os.path.join(checkpoint_dir, f'Epoch_{epoch+1}_checkpoint_{timestamp}.pth')
+    checkpoint_path = os.path.join(checkpoint_dir, f'Epoch_{epoch}_checkpoint_{timestamp}.pth')
 
     # Create a dictionary to save the state
     state = {
@@ -117,8 +176,6 @@ def save_checkpoint(model, checkpoint_dir, optimizer, epoch, train_loss, val_los
         'model_state_dict': model.state_dict(),
         'optimizer_state_dict': optimizer.state_dict(),
         'train_loss': train_loss,
-        'val_loss': val_loss,
-        'train_dice_score': train_dice_score,
         'val_dice_score': val_dice_score
     }
 
