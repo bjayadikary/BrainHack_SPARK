@@ -55,11 +55,11 @@ class DiceScore(nn.Module):
             predicted_class_labels = predicted_class_labels.long()
 
         # one-hot encode y_true
-        batch_size, channel, *spatial_dim = y_true.shape
-        y_true_one_hot = F.one_hot(y_true, num_classes=num_classes).view(batch_size, num_classes, *spatial_dim).float() # One hot of shape ([B, C=1, D, H, W, 4]), then reshaped to (B, C=4, D, H, W)
+        batch_size, channel, *spatial_dim = y_true.shape # after squeeze y_true shape [batch_size, *spatial_dim]
+        y_true_one_hot = F.one_hot(y_true.squeeze(), num_classes=num_classes).view(batch_size, num_classes, *spatial_dim).float() # One hot of shape ([B, C=1, D, H, W, 4]), then reshaped to (B, C=4, D, H, W)
 
         # One-hot encode the predicted_class_labels
-        predicted_one_hot = F.one_hot(predicted_class_labels, num_classes).view(batch_size, num_classes, *spatial_dim).float()
+        predicted_one_hot = F.one_hot(predicted_class_labels.squeeze(), num_classes).view(batch_size, num_classes, *spatial_dim).float()
 
         assert y_true_one_hot.shape == predicted_one_hot.shape
 
