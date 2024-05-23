@@ -3,7 +3,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import numpy as np
-
+import datetime
 
 class DiceLoss(nn.Module):
     def __init__(self, smooth=1.0):
@@ -19,10 +19,8 @@ class DiceLoss(nn.Module):
             y_true = y_true.long()
 
         # One-hot encode y_true
-        print('y_true shape:', y_true.shape)
-        y_true_one_hot = F.one_hot(y_true, num_classes=y_pred.shape[1]).permute(0, 5, 2, 3, 4, 1).squeeze().float() # y_one_hot of shape ([2, 1, 128, 240, 240, 4]), need to permute and squeeze such that channels=4 is in second dimension i.e. [2, 4, 155, 240, 240]
-        print('y_true_one_hot shape:', y_true_one_hot.shape)
-        print('y_pred shape', y_pred.shape)
+        batch_size, channel, *spatial_dim = y_true.shape
+        y_true_one_hot = F.one_hot(y_true, num_classes=y_pred.shape[1]).view(batch_size, y_pred.shape[1], *spatial_dim).float() # One hot generates ([batch, channel=1, D, H, W, 4]), then reshaped to (B, C=4, D, H, W)
         assert y_true_one_hot.size() == y_pred.size()
 
         # Flatten the tensors
@@ -57,23 +55,28 @@ class DiceScore(nn.Module):
             predicted_class_labels = predicted_class_labels.long()
 
         # one-hot encode y_true
-        y_true_one_hot = F.one_hot(y_true, num_classes=num_classes).permute(0, 5, 2, 3, 4, 1).squeeze().float() # y_one_hot of shape ([2, 1, 128, 240, 240, 4]), need to permute and squeeze such that channels=4 is in second dimension i.e. [batch, 4, 155, 240, 240]
+        batch_size, channel, *spatial_dim = y_true.shape
+        y_true_one_hot = F.one_hot(y_true, num_classes=num_classes).view(batch_size, num_classes, *spatial_dim).float() # One hot of shape ([B, C=1, D, H, W, 4]), then reshaped to (B, C=4, D, H, W)
 
         # One-hot encode the predicted_class_labels
-        predicted_one_hot = F.one_hot(predicted_class_labels, num_classes).permute(0, 4, 1, 2, 3).squeeze().float() # Before one-hot: [2, 128, 240, 240], After one-hot: [2, 128, 240, 240, 4], After permute: 
+        predicted_one_hot = F.one_hot(predicted_class_labels, num_classes).view(batch_size, num_classes, *spatial_dim).float()
+
+        assert y_true_one_hot.shape == predicted_one_hot.shape
+
         dice_scores = []
 
-        for cls in range(num_classes):
+        for cls in range(1, num_classes): # skip the background class (0)
             # Get first channel mask of predicted_one_hot and y_true_one_hot
             pred_onehot_cls = predicted_one_hot[:, cls, :, :, :] # [batch, 155, 240, 240]
             y_true_one_hot_cls = y_true_one_hot[:, cls, :, :, :] # [batch, 155, 240, 240]
             
+            # Calculate dice score for the current class/channel averaged across the batch
             dice_score_cls = dice_coefficient(pred_onehot_cls, y_true_one_hot_cls)
             
-            # Append the dice_score of each class and batch
+            # Append the dice_score
             dice_scores.append(dice_score_cls)
 
-        # Average dice scores across all channels(classes) to get mean_dice_score
+        # Average dice scores across all non-background channels(classes) to get mean_dice_score
         mean_dice_score = np.mean(dice_scores)
         
         return mean_dice_score
@@ -102,8 +105,11 @@ def dice_coefficient(y_pred, y): # takes one plane/class at a time out of 4 plan
 
 
 def save_checkpoint(model, checkpoint_dir, optimizer, epoch, train_loss, val_loss, train_dice_score, val_dice_score):
+    # Generate a timestamp
+    timestamp = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+    
     # File path to save the checkpoint
-    checkpoint_path = os.path.join(checkpoint_dir, f'Epoch_{epoch+1}_checkpoint.pth')
+    checkpoint_path = os.path.join(checkpoint_dir, f'Epoch_{epoch+1}_checkpoint_{timestamp}.pth')
 
     # Create a dictionary to save the state
     state = {
@@ -121,14 +127,14 @@ def save_checkpoint(model, checkpoint_dir, optimizer, epoch, train_loss, val_los
     print(f'Checkpoint saved at {checkpoint_path}')
 
 
-def load_checkpoint(model, optimizer, checkpoint_path):
-    checkpoint = torch.load(checkpoint_path)
-    model.load_state_dict(checkpoint['model_state_dict'])
-    optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
-    epoch = checkpoint['epoch']
-    loss = checkpoint['loss']
-    print(f"Checkpoint loaded from {checkpoint_path}")
-    return model, optimizer, epoch, loss
+# def load_checkpoint(model, optimizer, checkpoint_path):
+#     checkpoint = torch.load(checkpoint_path)
+#     model.load_state_dict(checkpoint['model_state_dict'])
+#     optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
+#     epoch = checkpoint['epoch']
+#     loss = checkpoint['loss']
+#     print(f"Checkpoint loaded from {checkpoint_path}")
+#     return model, optimizer, epoch, loss
 
 
 # To resume training from a saved checkpoint, use the following code
