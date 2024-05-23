@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[34]:
+# In[1]:
 
 
 import os
@@ -11,20 +11,20 @@ from torch.utils.data import Dataset, DataLoader
 from glob import glob as glob
 import nibabel as nib
 import numpy as np
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 import datetime
 import random
-import cv2
+# import cv2
 
 from torchsummary import summary
 from torch.utils.tensorboard import SummaryWriter
 
 # from skimage import transform
 # from skimage.transform import resize
-import torchio as tio
+# import torchio as tio
 
 import wandb
-import torch
+# import torch
 
 import monai
 from monai.networks.nets import UNet
@@ -37,20 +37,20 @@ from utilities import DiceScore
 # from utilities import DiceLoss
 
 
-# In[35]:
+# In[2]:
 
 
 my_device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 my_device
 
 
-# In[36]:
+# In[3]:
 
 
 wandb.login()
 
 
-# In[37]:
+# In[4]:
 
 
 wandb.init(
@@ -65,7 +65,7 @@ wandb.init(
 )
 
 
-# In[38]:
+# In[5]:
 
 
 # Initialize SummaryWriter
@@ -75,7 +75,7 @@ writer = SummaryWriter(log_dir=f'./logs/{model_name}')
 
 # # Dataset
 
-# In[39]:
+# In[6]:
 
 
 main_directory = "../data/train_minidata2021"
@@ -84,7 +84,7 @@ main_directory_val = "../data/validation_minidata2021"
 output_directory_val = "../data/validation_minidata2021/processed_val"
 
 
-# In[40]:
+# In[7]:
 
 
 def load_nifty(directory, example_id, suffix):
@@ -94,7 +94,7 @@ def load_nifty(directory, example_id, suffix):
     return nib.load(file_path)
 
 
-# In[41]:
+# In[8]:
 
 
 def load_channels(directory, example_id):
@@ -105,7 +105,7 @@ def load_channels(directory, example_id):
     return flair, t1, t1ce, t2
 
 
-# In[42]:
+# In[9]:
 
 
 def prepare_nifty(d, output_dir):
@@ -146,7 +146,7 @@ def prepare_nifty(d, output_dir):
     return img_path, mask_path
 
 
-# In[43]:
+# In[10]:
 
 
 def get_data(nifty, dtype="int16"):
@@ -160,7 +160,7 @@ train_volume_path = []
 train_segmentation_path = []
 
 
-# In[44]:
+# In[11]:
 
 
 for subject_dir in os.listdir(main_directory):
@@ -189,33 +189,33 @@ print("Train Volume Paths:", train_volume_path)
 print("Train Segmentation Paths:", train_segmentation_path)
 
 
-# In[45]:
+# In[12]:
 
 
 train_volumes_path = train_volume_path
 train_segmentations_path = train_segmentation_path
 
 
-# In[46]:
+# In[13]:
 
 
 train_volumes_path
 
 
-# In[47]:
+# In[14]:
 
 
 train_segmentations_path
 
 
-# In[48]:
+# In[15]:
 
 
 val_volumes_path = []
 val_segmentations_path = []
 
 
-# In[49]:
+# In[16]:
 
 
 for subject_dir in os.listdir(main_directory_val):
@@ -244,26 +244,26 @@ print("val Volume Paths:", train_volume_path)
 print("val Segmentation Paths:", train_segmentation_path)
 
 
-# In[50]:
+# In[17]:
 
 
 val_volumes_path = val_volumes_path
 val_segmentations_path = val_segmentations_path
 
 
-# In[51]:
+# In[18]:
 
 
 val_segmentations_path
 
 
-# In[52]:
+# In[19]:
 
 
 val_volumes_path
 
 
-# In[53]:
+# In[20]:
 
 
 class permute_and_add_axis_to_mask(object):
@@ -279,7 +279,7 @@ class permute_and_add_axis_to_mask(object):
                 'mask':mask}
 
 
-# In[54]:
+# In[21]:
 
 
 class BratsDataset(Dataset):
@@ -316,7 +316,7 @@ class BratsDataset(Dataset):
         return transformed_sample
 
 
-# In[55]:
+# In[22]:
 
 
 class spatialpad(object): # First dimension should be left untouched of [C, D, H, W]
@@ -356,7 +356,7 @@ class spatialpad(object): # First dimension should be left untouched of [C, D, H
         return padded_image   
 
 
-# In[56]:
+# In[23]:
 
 
 data_transform = Compose([ # input image of shape [240, 240, 155, 4]
@@ -365,7 +365,7 @@ data_transform = Compose([ # input image of shape [240, 240, 155, 4]
 ])
 
 
-# In[57]:
+# In[24]:
 
 
 train_ds = BratsDataset(
@@ -381,13 +381,13 @@ val_ds = BratsDataset(
 )
 
 
-# In[58]:
+# In[25]:
 
 
 train_ds[0]['image'].shape # previously numpy array of (240, 240, 155, 4), Now changed to: (4, 155, 240, 240) with first transform, then changed to (4, 256, 256, 256) by second transform
 
 
-# In[59]:
+# In[26]:
 
 
 train_ds[0]['mask'].shape # Before: (240, 240, 155) After:(1, 128, 240, 240)
@@ -396,14 +396,14 @@ train_ds[0]['mask'].min(),train_ds[0]['mask'].max()
 np.unique(train_ds[0]['mask'])
 
 
-# In[60]:
+# In[27]:
 
 
 sample_patient = train_ds[0]
 sample_patient['image'].shape
 
 
-# In[61]:
+# In[28]:
 
 
 # This was made for previous dimension, now the dimension is changed, so need resurrection
@@ -415,12 +415,12 @@ sample_patient['image'].shape
 
 modality = 0
 slice_idx = 150
-plt.imshow(sample_patient['image'][modality, slice_idx, :, :], cmap='gray')
-plt.imshow(sample_patient['mask'][0, slice_idx, :, :], alpha=0.4) # since channel dimension is also added on the mask volume
-plt.show()
+# plt.imshow(sample_patient['image'][modality, slice_idx, :, :], cmap='gray')
+# plt.imshow(sample_patient['mask'][0, slice_idx, :, :], alpha=0.4) # since channel dimension is also added on the mask volume
+# plt.show()
 
 
-# In[62]:
+# In[29]:
 
 
 def plot_image_label_predictedmsk(image, label, predicted_mask, lbl): # [B, 4, D, H, W], [B, 1, D, H, W], [B, 1, D, H, W]
@@ -430,24 +430,24 @@ def plot_image_label_predictedmsk(image, label, predicted_mask, lbl): # [B, 4, D
     sample_mask = label[0, 0, 150, :, :] # [H, W]
     predicted_mask = predicted_mask[0, 0, 150, :, :] # [H, W]
 
-    print(f'------------------{lbl}------------------')
-    fig, axes = plt.subplots(nrows=1, ncols=3, figsize=(10, 10))
-    titles = ['Image', 'Ground Mask', 'Predicted Mask']
-    for i, ax in enumerate(axes):
-        ax.axis('off')  # Turn off axis lines and labels
+    # print(f'------------------{lbl}------------------')
+    # fig, axes = plt.subplots(nrows=1, ncols=3, figsize=(10, 10))
+    # titles = ['Image', 'Ground Mask', 'Predicted Mask']
+    # for i, ax in enumerate(axes):
+    #     ax.axis('off')  # Turn off axis lines and labels
 
-        if i == 0:
-            ax.imshow(sample_image, cmap='gray')
-        elif i == 1:
-            ax.imshow(sample_mask, cmap='gray')
-        else:
-            ax.imshow(predicted_mask, cmap='gray')
-        ax.set_title(titles[i])
-    plt.show()
+    #     if i == 0:
+    #         ax.imshow(sample_image, cmap='gray')
+    #     elif i == 1:
+    #         ax.imshow(sample_mask, cmap='gray')
+    #     else:
+    #         ax.imshow(predicted_mask, cmap='gray')
+    #     ax.set_title(titles[i])
+    # plt.show()
     
 
 
-# In[63]:
+# In[30]:
 
 
 # image = next(iter(train_loader))['image'] # [1, 4, 256, 256, 256]
@@ -463,7 +463,7 @@ def plot_image_label_predictedmsk(image, label, predicted_mask, lbl): # [B, 4, D
 
 
 
-# In[64]:
+# In[31]:
 
 
 patient_num = random.randint(0, len(train_ds)-1) # random patient
@@ -474,26 +474,26 @@ sample_mask = train_ds[patient_num]['mask'] # (1, 128, 240, 240)
 sample_image_slice = sample_image[:, slice_idx, :, :] # (4, 240, 240)
 sample_mask_slice = sample_mask[0,slice_idx,:, :] # (240, 240)
 print('sample_mask_slice', sample_mask_slice.shape)
-fig, axes = plt.subplots(nrows=1, ncols=5, figsize=(15, 15))
-labels = []
+# fig, axes = plt.subplots(nrows=1, ncols=5, figsize=(15, 15))
+# labels = []
 
-# Iterate through first 4 modalities and display them
-for i, ax in enumerate(axes[:-1]):
-    ax.set_xlabel(f"")
-    ax.imshow(sample_image_slice[i,:,:], cmap='gray') # prints 4 modalities of image in 4 columns
-    ax.set_xticks([])
-    ax.set_yticks([])
+# # Iterate through first 4 modalities and display them
+# for i, ax in enumerate(axes[:-1]):
+#     ax.set_xlabel(f"")
+#     ax.imshow(sample_image_slice[i,:,:], cmap='gray') # prints 4 modalities of image in 4 columns
+#     ax.set_xticks([])
+#     ax.set_yticks([])
 
-# Display the mask in last column
-axes[-1].imshow(sample_mask_slice)
-axes[-1].set_xticks([])
-axes[-1].set_yticks([])
-plt.show()
+# # Display the mask in last column
+# axes[-1].imshow(sample_mask_slice)
+# axes[-1].set_xticks([])
+# axes[-1].set_yticks([])
+# plt.show()
 
 
 # # DataLoader
 
-# In[65]:
+# In[32]:
 
 
 # Create dataloader
@@ -508,7 +508,7 @@ val_loader = DataLoader(dataset=val_ds,
 
 # Sanity Check: Iterate through dataloader and check the size
 
-# In[66]:
+# In[33]:
 
 
 for batch in train_loader:
@@ -520,13 +520,13 @@ for batch in train_loader:
     
 
 
-# In[67]:
+# In[34]:
 
 
 len(val_loader)
 
 
-# In[68]:
+# In[35]:
 
 
 # for batch in val_loader:
@@ -537,51 +537,51 @@ len(val_loader)
 #     print('--------------------')
 
 
-# In[69]:
+# In[36]:
 
 
 len(train_loader) # Get the total number of batches. Returned 5, which means 5 batch of data each with shape(batch_size=2, 4, 155, 240, 240)
 
 
-# In[70]:
+# In[37]:
 
 
 len(val_loader)
 
 
-# In[71]:
+# In[38]:
 
 
 a_batch_image_mask = next(iter(train_loader))
 
 
-# In[72]:
+# In[39]:
 
 
 a_batch_mask = a_batch_image_mask['mask']
 
 
-# In[73]:
+# In[40]:
 
 
 a_batch_mask.shape
 
 
-# In[74]:
+# In[41]:
 
 
 a_mask_volume = a_batch_mask[0, :, :, :] # select first sample from the batch
 a_mask_volume.shape
 
 
-# In[75]:
+# In[42]:
 
 
 a_mask_slice = a_mask_volume[0, 75, :, :] # get 75th slice
 a_mask_slice.shape
 
 
-# In[76]:
+# In[43]:
 
 
 np.unique(a_mask_volume)
@@ -589,7 +589,7 @@ np.unique(a_mask_volume)
 
 # # Model
 
-# In[77]:
+# In[44]:
 
 
 # Instantiate a U-Net model
@@ -603,7 +603,7 @@ model = UNet(
 print(model)
 
 
-# In[78]:
+# In[45]:
 
 
 summary(model, input_size=(4, 128, 240, 240))  # channels, depth, height, width
@@ -611,7 +611,7 @@ summary(model, input_size=(4, 128, 240, 240))  # channels, depth, height, width
 
 # # Training
 
-# In[79]:
+# In[46]:
 
 
 def train_step(model,
@@ -675,7 +675,7 @@ def train_step(model,
     return train_loss, train_dice_score, train_image, train_label, train_pred
 
 
-# In[80]:
+# In[47]:
 
 
 def val_step(model,
@@ -731,7 +731,7 @@ def val_step(model,
     return val_loss, val_dice_score, val_image, val_label, val_pred
 
 
-# In[81]:
+# In[48]:
 
 
 from tqdm.auto import tqdm
@@ -813,7 +813,7 @@ def train(model,
     return results
 
 
-# In[82]:
+# In[49]:
 
 
 # Model name
@@ -831,7 +831,7 @@ os.makedirs(checkpoint_dir, exist_ok=True)
 print(f"Checkpoints will be saved in: {checkpoint_dir}")
 
 
-# In[83]:
+# In[50]:
 
 
 len(train_loader), len(val_loader)
