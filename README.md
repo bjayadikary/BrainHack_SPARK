@@ -1,7 +1,7 @@
 # BrainHack_SPARK
 ##### To run the 3DUNet_Brats2018.ipynb file, you need BraTS dataset organized according to the following file structure(ignore the naming conventions, just follow the directory layout as specified):
 ```
-brats_subset
+BraTS
 |-- TrainVolumes
 |   |-- BRATS_001.nii.gz
 |   |-- BRATS_002.nii.gz
