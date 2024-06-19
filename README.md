@@ -7,7 +7,7 @@ brats_subset
 |   |-- BRATS_002.nii.gz
 |   |-- BRATS_003.nii.gz
 |   |-- ...
-|-- TrainSegmentation
+|-- TrainSegmentations
 |   |-- BRATS_001.nii.gz
 |   |-- BRATS_002.nii.gz
 |   |-- BRATS_003.nii.gz
@@ -17,7 +17,7 @@ brats_subset
 |   |-- BRATS_486.nii.gz
 |   |-- BRATS_487.nii.gz
 |   |-- ...
-|-- TestSegmentation
+|-- TestSegmentations
 |   |-- BRATS_485.nii.gz
 |   |-- BRATS_486.nii.gz
 |   |-- BRATS_487.nii.gz
